@@ -79,6 +79,18 @@ func {{.parseName}}{{.enum.Name}}(name string) ({{.enum.Name}}, error) {
 }
 {{- end }}
 
+{{ if .comments }}
+var _{{.enum.Name}}Comments = {{ unmapifyComment .enum .lowercase }}
+
+// {{.enum.Name}}Comment returns the comment associated with the enum value name.
+func {{.enum.Name}}Comment(name string) string {
+	if x, ok := _{{.enum.Name}}Comments[name]; ok {
+		return x
+	}
+	return ""
+}
+{{ end }}
+
 {{ if .mustparse }}
 // MustParse{{.enum.Name}} converts a string to a {{.enum.Name}}, and panics if is not valid.
 func MustParse{{.enum.Name}}(name string) {{.enum.Name}} {

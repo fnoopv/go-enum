@@ -47,6 +47,7 @@ type rootT struct {
 	ForceLower        bool
 	ForceUpper        bool
 	NoComments        bool
+	Comments          bool
 	NoParse           bool
 	OutputSuffix      string
 }
@@ -209,6 +210,11 @@ func main() {
 				Destination: &argv.NoComments,
 			},
 			&cli.BoolFlag{
+				Name:        "comments",
+				Usage:       "If you add your own comments, a method for getting comments will be added.",
+				Destination: &argv.Comments,
+			},
+			&cli.BoolFlag{
 				Name:        "noparse",
 				Usage:       "Prevents generating the Parse method, or generates it as unexported if other methods depend on it.",
 				Destination: &argv.NoParse,
@@ -280,6 +286,7 @@ func main() {
 					ForceLower:        argv.ForceLower,
 					ForceUpper:        argv.ForceUpper,
 					NoComments:        argv.NoComments,
+					Comments:          argv.Comments,
 					NoParse:           argv.NoParse,
 					BuildTags:         argv.BuildTags.Value(),
 					ReplacementNames:  aliases,

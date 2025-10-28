@@ -22,6 +22,7 @@ type GeneratorConfig struct {
 	ForceLower        bool              `json:"force_lower"`
 	ForceUpper        bool              `json:"force_upper"`
 	NoComments        bool              `json:"no_comments"`
+	Comments          bool              `json:"comments"`
 	NoParse           bool              `json:"no_parse"`
 	BuildTags         []string          `json:"build_tags"`
 	ReplacementNames  map[string]string `json:"replacement_names"`
@@ -177,6 +178,13 @@ func WithForceUpper() Option {
 func WithNoComments() Option {
 	return func(g *GeneratorConfig) {
 		g.NoComments = true
+	}
+}
+
+// WithNoComments is used to add method for getting comments.
+func WithComments() Option {
+	return func(g *GeneratorConfig) {
+		g.Comments = true
 	}
 }
 

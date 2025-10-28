@@ -90,6 +90,8 @@ func NewGeneratorWithConfig(config GeneratorConfig) *Generator {
 	funcs["stringify"] = Stringify
 	funcs["mapify"] = Mapify
 	funcs["unmapify"] = Unmapify
+	funcs["unmapifyCommentStringEnum"] = UnmapifyCommentStringEnum
+	funcs["unmapifyComment"] = UnmapifyComment
 	funcs["namify"] = Namify
 	funcs["offset"] = Offset
 	funcs["quote"] = strconv.Quote
@@ -212,6 +214,7 @@ func (g *Generator) Generate(f *ast.File) ([]byte, error) {
 			"lowercase":     g.LowercaseLookup,
 			"nocase":        g.CaseInsensitive,
 			"nocomments":    g.NoComments,
+			"comments":      g.Comments,
 			"noIota":        g.NoIota,
 			"marshal":       g.Marshal,
 			"sql":           g.SQL,

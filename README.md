@@ -337,6 +337,7 @@ GLOBAL OPTIONS:
    --forcelower                                               Forces a camel cased comment to generate lowercased names. (default: false)
    --forceupper                                               Forces a camel cased comment to generate uppercased names. (default: false)
    --nocomments                                               Removes auto generated comments.  If you add your own comments, these will still be created. (default: false)
+   --comments                                                 If you add your own comments, a method for getting comments will be added. (default: false)
    --buildtag value, -b value [ --buildtag value, -b value ]  Adds build tags to a generated enum file.
    --output-suffix .go                                        Changes the default filename suffix of _enum to something else.  .go will be appended to the end of the string no matter what, so that `_test.go` cases can be accommodated
    --no-iota                                                  Disables the use of iota in generated enums. (default: false)

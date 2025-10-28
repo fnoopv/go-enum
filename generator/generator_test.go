@@ -989,3 +989,61 @@ type Greek string
 	assert.Contains(t, outputStr, "var ErrInvalidGreek")
 	assert.Contains(t, outputStr, "lookupSqlIntGreek")
 }
+
+// TestWithComments
+func TestWithComments(t *testing.T) {
+	input := `package test
+// ENUM(
+//
+//	disabled // This User has disabled
+//	banned // This User has been banned
+//	active // This User is active
+//
+// )
+type UserStatus int
+`
+	g := NewGenerator(WithComments())
+	f, err := parser.ParseFile(g.fileSet, "test.go", input, parser.ParseComments)
+	require.NoError(t, err)
+
+	output, err := g.Generate(f)
+	require.NoError(t, err)
+	require.NotNil(t, output)
+
+	outputStr := string(output)
+
+	// Should contain error variable because lookupSqlInt and Value use it
+	assert.Contains(t, outputStr, "var _UserStatusComments = map[string]string{")
+	assert.Contains(t, outputStr, `_UserStatusName[0:8]:   UserStatusDisabled,`)
+	assert.Contains(t, outputStr, `_UserStatusName[8:14]:  UserStatusBanned,`)
+	assert.Contains(t, outputStr, `_UserStatusName[14:20]: UserStatusActive,`)
+}
+
+// TestStringEnumWithComments
+func TestStringEnumWithComments(t *testing.T) {
+	input := `package test
+// ENUM(
+//
+//	disabled // This User has disabled
+//	banned // This User has been banned
+//	active // This User is active
+//
+// )
+type UserStatus string
+`
+	g := NewGenerator(WithComments())
+	f, err := parser.ParseFile(g.fileSet, "test.go", input, parser.ParseComments)
+	require.NoError(t, err)
+
+	output, err := g.Generate(f)
+	require.NoError(t, err)
+	require.NotNil(t, output)
+
+	outputStr := string(output)
+
+	// Should contain error variable because lookupSqlInt and Value use it
+	assert.Contains(t, outputStr, "var _UserStatusComments = map[string]string{")
+	assert.Contains(t, outputStr, `"disabled": UserStatusDisabled,`)
+	assert.Contains(t, outputStr, `"banned":   UserStatusBanned,`)
+	assert.Contains(t, outputStr, `"active":   UserStatusActive,`)
+}

@@ -61,6 +61,54 @@ func Unmapify(e Enum, lowercase bool) (ret string, err error) {
 	return
 }
 
+// UnmapifyComment returns a map that is all of the indexes for a string value lookup
+func UnmapifyComment(e Enum, lowercase bool) (ret string, err error) {
+	if e.Type == "string" {
+		return UnmapifyStringEnum(e, lowercase)
+	}
+	strName := fmt.Sprintf(`_%sName`, e.Name)
+	ret = "map[string]string{\n"
+	index := 0
+	for _, val := range e.Values {
+		if val.Name != skipHolder {
+			nextIndex := index + len(val.Name)
+			ret = fmt.Sprintf("%s%s[%d:%d]: \"%s\",\n", ret, strName, index, nextIndex, val.Comment)
+			if lowercase {
+				ret = fmt.Sprintf("%sstrings.ToLower(%s[%d:%d]): \"%s\",\n", ret, strName, index, nextIndex, val.Comment)
+			}
+			index = nextIndex
+		}
+	}
+	ret = ret + `}`
+	return
+}
+
+// UnmapifyCommentStringEnum returns a map that is all of the indexes for a string value lookup
+func UnmapifyCommentStringEnum(e Enum, lowercase bool) (ret string, err error) {
+	var builder strings.Builder
+	_, err = builder.WriteString("map[string]string{\n")
+	if err != nil {
+		return
+	}
+	for _, val := range e.Values {
+		if val.Name != skipHolder {
+			_, err = builder.WriteString(fmt.Sprintf("%q:\"%s\",\n", val.ValueStr, val.Comment))
+			if err != nil {
+				return
+			}
+			if lowercase && strings.ToLower(val.ValueStr) != val.ValueStr {
+				_, err = builder.WriteString(fmt.Sprintf("%q:\"%s\",\n", strings.ToLower(val.ValueStr), val.Comment))
+				if err != nil {
+					return
+				}
+			}
+		}
+	}
+	builder.WriteByte('}')
+	ret = builder.String()
+	return
+}
+
 // Unmapify returns a map that is all of the indexes for a string value lookup
 func UnmapifyStringEnum(e Enum, lowercase bool) (ret string, err error) {
 	var builder strings.Builder
