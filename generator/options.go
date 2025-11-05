@@ -181,7 +181,7 @@ func WithNoComments() Option {
 	}
 }
 
-// WithNoComments is used to add method for getting comments.
+// WithComments is used to add method for getting comments.
 func WithComments() Option {
 	return func(g *GeneratorConfig) {
 		g.Comments = true
